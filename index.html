@@ -74,11 +74,12 @@
     .scale-value { min-width: 32px; text-align: center; color: #dc328a; font-weight: 600; font-size: 11px; }
 
     .lock-btn {
-      background: none; border: 1px solid rgba(0,64,197,0.4);
-      color: rgba(255,255,255,0.7); border-radius: 6px; padding: 3px 6px; margin: 0;
-      font-size: 14px; cursor: pointer; transition: background 0.15s; line-height: 1;
+      background: none; border: 1px solid rgba(0,64,197,0.4); display: flex; align-items: center; justify-content: center; width: 26px; height: 26px;
+      color: rgba(255,255,255,0.7); border-radius: 6px; padding: 0; margin: 0;
+      cursor: pointer; transition: background 0.15s;
       -webkit-appearance: none; appearance: none; font-family: inherit;
     }
+    .lock-btn svg { width: 14px; height: 14px; }
     .lock-btn:hover { background: rgba(0,64,197,0.25); }
     .lock-btn.locked { color: #dc328a; }
 
@@ -182,7 +183,9 @@
           <span class="scale-value" id="main-star-scale-value">1</span>
         </div>
       </div>
-      <button class="lock-btn locked" id="main-lock-btn" title="Skalierung koppeln/entkoppeln">🔒</button>
+      <button class="lock-btn locked" id="main-lock-btn" title="Skalierung koppeln/entkoppeln">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      </button>
     </div>
     <button class="ctrl-btn" id="btn-open-layout-modal" style="margin-left:8px;">Layouts</button>
   </div>
@@ -192,8 +195,14 @@
       <button class="ctrl-btn" id="btn-leave-editor">← Zurück</button>
       <div class="editor-title" id="editor-title-text">Layout (1920×1080)</div>
       <div class="editor-header-right">
-        <button class="ctrl-btn primary" id="btn-download-svg">Download SVG</button>
-        <button class="ctrl-btn primary" id="btn-download">Download PNG</button>
+        <button class="ctrl-btn primary" id="btn-download-svg" style="display:flex; align-items:center; gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          SVG
+        </button>
+        <button class="ctrl-btn primary" id="btn-download" style="display:flex; align-items:center; gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          PNG
+        </button>
       </div>
     </div>
     <div class="editor-content" id="editor-scroll-area">
@@ -229,7 +238,9 @@
               <span class="scale-value" id="ed-star-scale-value">1</span>
             </div>
           </div>
-          <button class="lock-btn locked" id="ed-lock-btn" title="Skalierung koppeln/entkoppeln">🔒</button>
+          <button class="lock-btn locked" id="ed-lock-btn" title="Skalierung koppeln/entkoppeln">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          </button>
         </div>
       </div>
     </div>
@@ -241,10 +252,10 @@
       <div style="margin-bottom:12px;">
         <label style="font-size:12px; color:#aaa; display:block; margin-bottom:8px;">Vorlagen</label>
         <div style="display:flex; flex-wrap:wrap;">
-          <button class="format-btn" data-w="1920" data-h="1080">16:9 (1920×1080)</button>
-          <button class="format-btn" data-w="1080" data-h="1350">4:5 (1080×1350)</button>
-          <button class="format-btn" data-w="1000" data-h="1000">1:1 (1000×1000)</button>
-          <button class="format-btn" data-w="1400" data-h="300">Banner (1400×300)</button>
+          <button class="format-btn" data-w="1920" data-h="1080">16:9</button>
+          <button class="format-btn" data-w="1080" data-h="1350">4:5</button>
+          <button class="format-btn" data-w="1000" data-h="1000">1:1</button>
+          <button class="format-btn" data-w="1400" data-h="300">Banner</button>
         </div>
       </div>
       <div class="modal-row">
@@ -633,9 +644,12 @@
       mainStarScale = (v + 1) * 0.5;
       rebuildMain();
     });
+    const ICON_LOCK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
+    const ICON_UNLOCK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>';
+
     mainLockBtn.addEventListener('click', () => {
       mainScaleLocked = !mainScaleLocked;
-      mainLockBtn.textContent = mainScaleLocked ? '🔒' : '🔓';
+      mainLockBtn.innerHTML = mainScaleLocked ? ICON_LOCK : ICON_UNLOCK;
       mainLockBtn.classList.toggle('locked', mainScaleLocked);
       if (mainScaleLocked) {
         mainStarScale = mainArrowScale;
@@ -692,7 +706,7 @@
     edLockBtn.addEventListener('click', () => {
       const p = pages[activePageIdx];
       p.scaleLocked = !p.scaleLocked;
-      edLockBtn.textContent = p.scaleLocked ? '🔒' : '🔓';
+      edLockBtn.innerHTML = p.scaleLocked ? ICON_LOCK : ICON_UNLOCK;
       edLockBtn.classList.toggle('locked', p.scaleLocked);
       if (p.scaleLocked) {
         p.starScale = p.arrowScale;
@@ -717,7 +731,7 @@
       edArrowScaleValue.textContent = aV;
       edStarScaleSlider.value = sV;
       edStarScaleValue.textContent = sV;
-      edLockBtn.textContent = p.scaleLocked ? '🔒' : '🔓';
+      edLockBtn.innerHTML = p.scaleLocked ? ICON_LOCK : ICON_UNLOCK;
       edLockBtn.classList.toggle('locked', p.scaleLocked);
       if (p.scaleLocked) {
         edScaleSlider.value = aV;
