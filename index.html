@@ -64,27 +64,29 @@
     .scale-row label { min-width: 42px; color: rgba(255,255,255,0.5); font-size: 10px; }
 
     input[type=range] {
-      -webkit-appearance: none; width: 120px; height: 4px; border-radius: 2px;
+      -webkit-appearance: none; appearance: none; width: 120px; height: 4px; border-radius: 2px;
       background: rgba(0,64,197,0.4); outline: none; cursor: pointer;
     }
     input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+      -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%;
       background: #dc328a; border: 2px solid rgba(255,255,255,0.3);
     }
     .scale-value { min-width: 32px; text-align: center; color: #dc328a; font-weight: 600; font-size: 11px; }
 
     .lock-btn {
       background: none; border: 1px solid rgba(0,64,197,0.4);
-      color: rgba(255,255,255,0.7); border-radius: 6px; padding: 3px 6px;
+      color: rgba(255,255,255,0.7); border-radius: 6px; padding: 3px 6px; margin: 0;
       font-size: 14px; cursor: pointer; transition: background 0.15s; line-height: 1;
+      -webkit-appearance: none; appearance: none; font-family: inherit;
     }
     .lock-btn:hover { background: rgba(0,64,197,0.25); }
     .lock-btn.locked { color: #dc328a; }
 
     .ctrl-btn {
       background: rgba(0,64,197,0.25); border: 1px solid rgba(0,64,197,0.4);
-      color: rgba(255,255,255,0.8); border-radius: 8px; padding: 5px 12px;
+      color: rgba(255,255,255,0.8); border-radius: 8px; padding: 5px 12px; margin: 0;
       font-size: 12px; cursor: pointer; transition: background 0.15s; font-family: inherit;
+      -webkit-appearance: none; appearance: none;
     }
     .ctrl-btn:hover { background: rgba(0,64,197,0.45); }
     .ctrl-btn.primary { background: #dc328a; color: #fff; border: none; font-weight: bold; }
@@ -105,7 +107,12 @@
       border-radius: 8px; color: #fff; padding: 7px 10px; font-size: 13px; width: 100%;
     }
     .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
-    .format-btn { padding: 5px 8px; font-size: 11px; background: rgba(0,64,197,0.15); border: 1px solid rgba(0,64,197,0.3); border-radius: 6px; cursor: pointer; color: #fff; transition: background 0.1s; }
+    .format-btn { 
+      padding: 5px 8px; font-size: 11px; background: rgba(0,64,197,0.15); 
+      border: 1px solid rgba(0,64,197,0.3); border-radius: 6px; cursor: pointer; 
+      color: #fff; transition: background 0.1s; 
+      -webkit-appearance: none; appearance: none; margin: 0 6px 6px 0; font-family: inherit;
+    }
     .format-btn:hover { background: rgba(0,64,197,0.4); }
 
     #editor-view {
@@ -231,9 +238,9 @@
   <div id="modal-overlay">
     <div id="modal">
       <h2 style="margin-bottom:16px;">Neues Format</h2>
-      <div style="margin-bottom:16px;">
+      <div style="margin-bottom:12px;">
         <label style="font-size:12px; color:#aaa; display:block; margin-bottom:8px;">Vorlagen</label>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div style="display:flex; flex-wrap:wrap;">
           <button class="format-btn" data-w="1920" data-h="1080">16:9 (1920×1080)</button>
           <button class="format-btn" data-w="1080" data-h="1350">4:5 (1080×1350)</button>
           <button class="format-btn" data-w="1000" data-h="1000">1:1 (1000×1000)</button>
