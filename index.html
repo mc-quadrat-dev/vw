@@ -40,6 +40,7 @@
       pointer-events: none; z-index: 2;
       background-repeat: no-repeat;
       background-position: top center;
+      background-size: cover;
     }
     .arrow img { display: block; width: 100%; height: 100%; }
 
@@ -104,6 +105,8 @@
       border-radius: 8px; color: #fff; padding: 7px 10px; font-size: 13px; width: 100%;
     }
     .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+    .format-btn { padding: 5px 8px; font-size: 11px; background: rgba(0,64,197,0.15); border: 1px solid rgba(0,64,197,0.3); border-radius: 6px; cursor: pointer; color: #fff; transition: background 0.1s; }
+    .format-btn:hover { background: rgba(0,64,197,0.4); }
 
     #editor-view {
       display: none; position: fixed; inset: 0; z-index: 50; background: #060e2a;
@@ -157,18 +160,18 @@
     <label>Skalierung</label>
     <div class="scale-group" id="main-scale-group">
       <div id="main-scale-single">
-        <input type="range" id="main-scale-slider" min="1" max="6" value="1" step="1">
+        <input type="range" id="main-scale-slider" min="1" max="8" value="1" step="1">
         <span class="scale-value" id="main-scale-value">1</span>
       </div>
       <div class="scale-dual" id="main-scale-dual" style="display:none;">
         <div class="scale-row">
           <label>Pfeile</label>
-          <input type="range" id="main-arrow-scale-slider" min="1" max="6" value="1" step="1" style="width:90px;">
+          <input type="range" id="main-arrow-scale-slider" min="1" max="8" value="1" step="1" style="width:90px;">
           <span class="scale-value" id="main-arrow-scale-value">1</span>
         </div>
         <div class="scale-row">
           <label>Fokus</label>
-          <input type="range" id="main-star-scale-slider" min="1" max="6" value="1" step="1" style="width:90px;">
+          <input type="range" id="main-star-scale-slider" min="1" max="8" value="1" step="1" style="width:90px;">
           <span class="scale-value" id="main-star-scale-value">1</span>
         </div>
       </div>
@@ -204,18 +207,18 @@
         <label>Skalierung</label>
         <div class="scale-group" id="ed-scale-group">
           <div id="ed-scale-single">
-            <input type="range" id="ed-scale-slider" min="1" max="6" value="1" step="1">
+            <input type="range" id="ed-scale-slider" min="1" max="8" value="1" step="1">
             <span class="scale-value" id="ed-scale-value">1</span>
           </div>
           <div class="scale-dual" id="ed-scale-dual" style="display:none;">
             <div class="scale-row">
               <label>Pfeile</label>
-              <input type="range" id="ed-arrow-scale-slider" min="1" max="6" value="1" step="1" style="width:90px;">
+              <input type="range" id="ed-arrow-scale-slider" min="1" max="8" value="1" step="1" style="width:90px;">
               <span class="scale-value" id="ed-arrow-scale-value">1</span>
             </div>
             <div class="scale-row">
               <label>Fokus</label>
-              <input type="range" id="ed-star-scale-slider" min="1" max="6" value="1" step="1" style="width:90px;">
+              <input type="range" id="ed-star-scale-slider" min="1" max="8" value="1" step="1" style="width:90px;">
               <span class="scale-value" id="ed-star-scale-value">1</span>
             </div>
           </div>
@@ -228,6 +231,15 @@
   <div id="modal-overlay">
     <div id="modal">
       <h2 style="margin-bottom:16px;">Neues Format</h2>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:12px; color:#aaa; display:block; margin-bottom:8px;">Vorlagen</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="format-btn" data-w="1920" data-h="1080">16:9 (1920×1080)</button>
+          <button class="format-btn" data-w="1080" data-h="1350">4:5 (1080×1350)</button>
+          <button class="format-btn" data-w="1000" data-h="1000">1:1 (1000×1000)</button>
+          <button class="format-btn" data-w="1400" data-h="300">Banner (1400×300)</button>
+        </div>
+      </div>
       <div class="modal-row">
         <div>
           <label style="font-size:12px; color:#aaa;">Breite</label>
@@ -402,8 +414,12 @@
         this.arrows = [];
         const frag = document.createDocumentFragment();
         const start = -this.cell;
-        for (let y = start; y < height + this.cell; y += this.cell) {
-          for (let x = start; x < width + this.cell; x += this.cell) {
+        // Use the maximum visible width/height available in case the browser hasn't fully computed viewport bounds immediately
+        const safeWidth = Math.max(width, document.documentElement.clientWidth || 0, window.innerWidth || 0);
+        const safeHeight = Math.max(height, document.documentElement.clientHeight || 0, window.innerHeight || 0);
+
+        for (let y = start; y < safeHeight + this.cell; y += this.cell) {
+          for (let x = start; x < safeWidth + this.cell; x += this.cell) {
             const d = document.createElement('div');
             d.className = 'arrow';
             d.style.width = this.arrowSize + 'px';
@@ -719,6 +735,15 @@
         editorEngine.resizePanel();
       }
     });
+
+    // Make sure we have the full, correct screen size after everything settles (solves issues with late maximizing browsers)
+    window.addEventListener('load', () => {
+      if (document.getElementById('main-view').style.display !== 'none') {
+        rebuildMain();
+        document.getElementById('main-grain').style.backgroundImage = `url(${generateGrainImage(window.innerWidth, window.innerHeight)})`;
+      }
+    });
+
     rebuildMain();
     document.getElementById('main-grain').style.backgroundImage = `url(${generateGrainImage(window.innerWidth, window.innerHeight)})`;
 
@@ -745,6 +770,13 @@
       } else {
         pages = [newPage]; activePageIdx = 0; openEditor();
       }
+    });
+
+    document.querySelectorAll('.format-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        fW.value = btn.getAttribute('data-w');
+        fH.value = btn.getAttribute('data-h');
+      });
     });
 
     // --- EDITOR NAV ---
@@ -924,7 +956,7 @@
       const halfOrig = (16.78 / 2).toFixed(4);
 
       let s = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-      s += `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${p.w} ${p.h}" width="${p.w}" height="${p.h}">\n`;
+      s += `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${p.w} ${p.h}" width="${p.w}" height="${p.h}">\n`;
       s += `<defs>\n`;
 
       // Main background radial gradient
@@ -951,7 +983,7 @@
       // Background
       s += `<rect width="${p.w}" height="${p.h}" fill="url(#bg_rad)"/>\n`;
       s += `<rect width="${p.w}" height="${p.h}" fill="url(#bg_lin)"/>\n`;
-      s += `<image href="${generateGrainImage(p.w, p.h)}" width="${p.w}" height="${p.h}" preserveAspectRatio="none" />\n`;
+      s += `<image xlink:href="${generateGrainImage(p.w, p.h)}" width="${p.w}" height="${p.h}" preserveAspectRatio="none" />\n`;
 
       // Arrows – each as an individual transformed group with inline path
       s += `<g id="arrows">\n`;
